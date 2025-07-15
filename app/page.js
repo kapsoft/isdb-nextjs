@@ -20,8 +20,7 @@ export default function Home() {
       <footer className="py-8 px-6 border-t border-gray-200 bg-gray-50">
         <div className="container mx-auto text-center text-gray-600">
           <Logo className="justify-center mb-4" />
-          <p>&copy; 2025 ISDB - The Internet Sports Data Base</p>
-          <p className="text-sm text-gray-500 mt-2">&copy; 2025 Kapsoft</p>
+          <p className="text-sm text-gray-500">&copy; 2025 Kapsoft</p>
         </div>
       </footer>
     </main>
