@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-export default function Logo({ className = "", size = "default" }) {
+export default function Logo({ className = "", size = "default", backgroundTransparent = false }) {
   const sizes = {
     nav: { icon: 120, text: "text-2xl" },
     small: { icon: 180, text: "text-2xl" },
@@ -13,13 +13,15 @@ export default function Logo({ className = "", size = "default" }) {
   return (
     <div className={`flex items-center ${className}`}>
       {/* ISDB Logo */}
-      <Image 
-        src="/isdb_logo24.png" 
-        alt="ISDB Logo" 
-        width={icon} 
-        height={icon}
-        className="object-contain"
-      />
+      <div className={backgroundTransparent ? 'drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]' : ''}>
+        <Image 
+          src="/isdb_logo24_transparent.png" 
+          alt="ISDB Logo" 
+          width={icon} 
+          height={icon}
+          className="object-contain"
+        />
+      </div>
     </div>
   )
 } 

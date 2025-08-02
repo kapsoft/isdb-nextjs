@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import ThreeAnimation from './ThreeAnimation'
+import FootballAnimation from './FootballAnimation'
 import Logo from './Logo'
 import Confetti from './Confetti'
 
@@ -10,16 +11,21 @@ export default function Hero() {
   const [showSearch, setShowSearch] = useState(false)
   const [searchValue, setSearchValue] = useState("")
   const [showComingSoon, setShowComingSoon] = useState(false)
+  const [currentAnimation, setCurrentAnimation] = useState('basketball') // Toggle state
   const searchTimeoutRef = useRef(null)
 
   const handleStartClick = () => {
-    setShowConfetti(true)
     setShowSearch(true)
     
-    // Stop confetti after 45 seconds
-    searchTimeoutRef.current = setTimeout(() => {
-      setShowConfetti(false)
-    }, 45000)
+    // If confetti isn't already showing, trigger it
+    if (!showConfetti) {
+      setShowConfetti(true)
+      
+      // Stop confetti after 45 seconds
+      searchTimeoutRef.current = setTimeout(() => {
+        setShowConfetti(false)
+      }, 45000)
+    }
   }
 
   const handleSearchInput = (e) => {
@@ -43,7 +49,18 @@ export default function Hero() {
   }
 
   useEffect(() => {
+    // Trigger confetti after 30 seconds
+    const confettiTimer = setTimeout(() => {
+      setShowConfetti(true)
+      
+      // Stop confetti after 45 seconds
+      searchTimeoutRef.current = setTimeout(() => {
+        setShowConfetti(false)
+      }, 45000)
+    }, 30000)
+
     return () => {
+      clearTimeout(confettiTimer)
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current)
       }
@@ -54,8 +71,16 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-bg">
       {/* Three.js Animation Container */}
       <div className="absolute inset-0 z-0">
-        <ThreeAnimation />
+        {currentAnimation === 'basketball' ? <ThreeAnimation /> : <FootballAnimation />}
       </div>
+      
+      {/* Animation Toggle Button */}
+      <button
+        onClick={() => setCurrentAnimation(prev => prev === 'basketball' ? 'football' : 'basketball')}
+        className="absolute top-20 right-4 z-20 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg hover:bg-white transition-all hover:scale-105 text-sm font-medium text-gray-700"
+      >
+        {currentAnimation === 'basketball' ? '🏈 Switch to Football' : '🏀 Switch to Basketball'}
+      </button>
       
       {/* Confetti Effect */}
       <Confetti isActive={showConfetti} />
@@ -63,12 +88,20 @@ export default function Hero() {
       {/* Content Overlay */}
       <div className="relative z-10 text-center px-6" style={{ paddingTop: 'calc(2vh - 5px)', marginTop: '-55vh' }}>
         <div className="mb-3">
-          <Logo size="large" className="justify-center" />
+          <Logo 
+            size="large" 
+            className="justify-center" 
+            backgroundTransparent={currentAnimation === 'football'}
+          />
         </div>
-        <p className="text-2xl md:text-3xl mb-1 text-gray-700 font-light">
+        <p className={`text-2xl md:text-3xl mb-1 font-light ${
+          currentAnimation === 'football' ? 'text-white' : 'text-gray-700'
+        }`}>
           Internet Sports Data Base
         </p>
-        <p className="text-lg md:text-xl mb-7 max-w-2xl mx-auto text-gray-600">
+        <p className={`text-lg md:text-xl mb-7 max-w-2xl mx-auto ${
+          currentAnimation === 'football' ? 'text-white' : 'text-gray-600'
+        }`}>
           The ultimate AI-powered graph of sports data. 
           Discover connections between players, teams, and moments in sports history.
         </p>
